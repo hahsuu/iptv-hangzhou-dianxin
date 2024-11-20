@@ -13,25 +13,28 @@ jobs:
       # 1. 检出 Fork 仓库代码
       - name: Checkout Fork Repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       # 2. 添加上游仓库并同步
       - name: Sync with Upstream Repository
         run: |
-          git remote remove upstream || true # 如果 upstream 已存在，则先移除
+          git remote remove upstream || true
           git remote add upstream https://github.com/c1pher-cn/iptv-hangzhou-dianxin.git
           git fetch upstream
-          git merge upstream/main -m "Sync from upstream" || git merge --abort
+          git merge upstream/main --allow-unrelated-histories -m "Sync from upstream"
           git push origin main
 
       # 3. 替换文件内容
       - name: Replace IP in m3u8 and m3u files
         run: |
-          # 替换杭州电信高清.m3u8 文件中的 IP
-          sed -i 's/192\.168\.1\.1/192.168.123.1/g' 杭州电信高清.m3u8
-          # 替换杭州电信高清.m3u 文件中的 IP
-          sed -i 's/192\.168\.1\.1/192.168.123.1/g' 杭州电信高清.m3u
+          if [ -f "杭州电信高清.m3u8" ]; then
+            sed -i 's/192\.168\.1\.1/192.168.123.1/g' 杭州电信高清.m3u8
+          fi
+          if [ -f "杭州电信高清.m3u" ]; then
+            sed -i 's/192\.168\.1\.1/192.168.123.1/g' 杭州电信高清.m3u
+          fi
 
-          # 检查是否有改动，并提交更改
           if ! git diff --quiet; then
             git config user.name "GitHub Actions"
             git config user.email "actions@github.com"
