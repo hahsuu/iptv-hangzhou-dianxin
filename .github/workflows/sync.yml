@@ -17,6 +17,7 @@ jobs:
       # 2. 添加上游仓库并同步
       - name: Sync with Upstream Repository
         run: |
+          git remote remove upstream || true # 如果 upstream 已存在，则先移除
           git remote add upstream https://github.com/c1pher-cn/iptv-hangzhou-dianxin.git
           git fetch upstream
           git merge upstream/main -m "Sync from upstream" || git merge --abort
