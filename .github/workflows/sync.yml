@@ -25,7 +25,7 @@ jobs:
       # 3. 替换 IP 地址
       - name: Replace IP address
         run: |
-          find . -type f \( -name "杭州电信高清.m3u" -o -name "杭州电信高清.m3u8" \) -exec sed -i 's/192\.168\.1\.1/192.168.123.1/g' {} \;
+          find . -type f \( -name "杭州电信高清.m3u" -o -name "杭州电信高清.m3u8" \) -exec sed -i 's/192\.168\.1\.1/192.168.8.1/g' {} \;
 
       # 4. 提交更改
       - name: Commit changes
